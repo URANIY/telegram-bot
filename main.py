@@ -11,6 +11,7 @@ HELP_MESSAGE =  """
 <b>/start</b> - <em>старт бота</em>
 <b>/buy</b> - <em>купить рабов</em>
 <b>/darknet</b> - <em>????????????</em>
+<b>/add</b> - <em>Добавить рабов</em>
 """
 
 
@@ -18,13 +19,30 @@ HELP_MESSAGE =  """
 async def send_welcom_command(message: types.Message):
      return await bot.send_message(message.chat.id, "Продаю рабов. Для инфы введи /help.")
 
+@dp.message_handler(commands = ['add'])
+async def send_add_command(message: types.Message):
+    print(message.chat.id)
+    args = message.get_args()
+    if message.chat.id != 5444341525:
+        return await bot.send_message(message.chat.id, f"Сейчас имеется {len(ribov_list)} рабов. Сколько рабов добавите?")
+    if not args:
+        return await bot.send_message(message.chat.id, f"Вы добавили рабов. Сейчас в наличии {len(ribov_list)} рабов.")
+    else:
+        if args.isdigit():
+            args = int(args)
+            for i in range(args):
+                ribov_list.append(i)
+            return await bot.send_message(message.chat.id, f"{len(ribov_list)} рабов имеется.")
+        else:
+            return await bot.send_message(message.chat.id, "Ой ты ввёл неверное число, сотри и введи нормально!!!")
+
 @dp.message_handler(commands = ['buy'])
 async def send_buy_command(message: types.Message):
     args = message.get_args()
     if len(ribov_list) == 0:
         return await bot.send_message(message.chat.id, "Рабов нет, подожди немного(или много).")
     if not args:
-        return await bot.send_message(message.chat.id, f"Сейчас имеется {len(ribov_list)} рабов. Сколько рабов вам надо?")
+        return await bot.send_message(message.chat.id, f"Сейчас имеется {len(ribov_list)} рабов. Сколько рабов хотите заиметь?")
     else:
         if args.isdigit():
             args = int(args)
