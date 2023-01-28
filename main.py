@@ -2,18 +2,15 @@ import logging
 import config
 from aiogram import Bot, Dispatcher, executor, types
 ribov_list = [1,2,3,4,5,6,7,8,9,10]
+ribov_dict = {"Африканцы" : 4, "Американцы" : 1, "Европейцы" : 10}
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=config.token)
 dp = Dispatcher(bot)
 
-HELP_MESSAGE =  """
-<b>/help</b> - <em>список команд</em>
-<b>/start</b> - <em>старт бота</em>
-<b>/buy</b> - <em>купить рабов</em>
-<b>/darknet</b> - <em>????????????</em>
-<b>/add</b> - <em>Добавить рабов</em>
-"""
-
+HELP_MESSAGE =  """<b>/help</b> - <em>список команд</em><b>/start</b> - <em>старт бота</em><b>/buy</b> - <em>купить рабов</em><b>/darknet</b> - <em>????????????</em><b>/add</b> - <em>Добавить рабов</em>"""def print_dict (ribov):
+    tmp = ""    for i in ribov:
+        tmp += (f'{i} : {ribov[i]} \n')
+    return  tmp
 
 @dp.message_handler(commands = ['start'])
 async def send_welcom_command(message: types.Message):
@@ -38,15 +35,15 @@ async def send_add_command(message: types.Message):
 
 @dp.message_handler(commands = ['buy'])
 async def send_buy_command(message: types.Message):
+    print_dict(ribov_dict)
     args = message.get_args()
-    if len(ribov_list) == 0:
-        return await bot.send_message(message.chat.id, "Рабов нет, подожди немного(или много).")
+    args = args.split()
     if not args:
-        return await bot.send_message(message.chat.id, f"Сейчас имеется {len(ribov_list)} рабов. Сколько рабов хотите заиметь?")
+        return await bot.send_message(message.chat.id, f"Сейчас имеется \n{print_dict(ribov_dict)} рабов. Сколько рабов хотите заиметь?")
     else:
-        if args.isdigit():
+        if args[1].isdigit():
             args = int(args)
-            if args > len(ribov_list):
+            if args[1] > ribov_list:
                 return await bot.send_message(message.chat.id, "Сорян, но у нас нет столько рабов, попроси поменьше, пж.")
             else:
                 for i in range(args):
